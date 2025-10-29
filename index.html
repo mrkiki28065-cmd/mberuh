@@ -201,12 +201,12 @@
    </div>
   </div>
 
-  <!-- Efek Hujan dan Petir -->
+  <!-- Efek Hujan & Petir -->
   <canvas id="rain"></canvas>
   <canvas id="lightning"></canvas>
 
   <script>
-  // Welcome transition
+  // Transisi Welcome
   document.getElementById('go-to-payment').addEventListener('click', function () {
     const audio = document.getElementById('clickSound');
     audio.play(); 
@@ -222,7 +222,7 @@
     });
   });
 
-  // 🌧️ Efek Hujan Deras
+  // 🌧️ Hujan Deras
   const rainCanvas = document.getElementById("rain");
   const rainCtx = rainCanvas.getContext("2d");
   rainCanvas.width = window.innerWidth;
@@ -256,32 +256,45 @@
   }
   drawRain();
 
-  // ⚡ Efek Petir Kilat
+  // ⚡ Efek Petir Kuning Menyala
   const lightningCanvas = document.getElementById("lightning");
   const ltx = lightningCanvas.getContext("2d");
   lightningCanvas.width = window.innerWidth;
   lightningCanvas.height = window.innerHeight;
 
-  function lightningStrike() {
-    ltx.clearRect(0, 0, lightningCanvas.width, lightningCanvas.height);
-    const flashes = Math.floor(Math.random() * 3) + 1;
-    for (let i = 0; i < flashes; i++) {
+  function drawLightningStrike() {
+    const count = Math.floor(Math.random() * 8) + 5; // jumlah petir per kilatan
+    for (let i = 0; i < count; i++) {
       const x = Math.random() * lightningCanvas.width;
       const y = Math.random() * lightningCanvas.height / 2;
-      const w = Math.random() * 5 + 2;
-      const h = lightningCanvas.height;
-      ltx.fillStyle = `rgba(255, 255, 255, ${Math.random() * 0.8 + 0.2})`;
-      ltx.fillRect(x - w / 2, y, w, h);
+      const segments = Math.floor(Math.random() * 5) + 3;
+      let currentX = x, currentY = y;
+
+      ltx.strokeStyle = `rgba(255, 255, 100, ${Math.random() * 0.9 + 0.5})`;
+      ltx.lineWidth = Math.random() * 3 + 1.5;
+      ltx.beginPath();
+      ltx.moveTo(currentX, currentY);
+
+      for (let j = 0; j < segments; j++) {
+        currentX += (Math.random() - 0.5) * 50;
+        currentY += Math.random() * 80;
+        ltx.lineTo(currentX, currentY);
+      }
+      ltx.stroke();
     }
+
+    // Efek kilatan layar
+    document.body.style.backgroundColor = 'rgba(255, 255, 180, 0.1)';
     setTimeout(() => {
       ltx.clearRect(0, 0, lightningCanvas.width, lightningCanvas.height);
-    }, 80);
+      document.body.style.backgroundColor = '';
+    }, 120);
   }
 
-  // Petir muncul acak setiap 2–6 detik
   function randomLightning() {
-    if (Math.random() < 0.8) lightningStrike();
-    setTimeout(randomLightning, Math.random() * 4000 + 2000);
+    drawLightningStrike();
+    // Petir muncul sering dan acak tiap 0.5–3 detik
+    setTimeout(randomLightning, Math.random() * 2500 + 500);
   }
   randomLightning();
   </script>
