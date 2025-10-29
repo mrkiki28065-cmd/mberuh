@@ -18,7 +18,7 @@
       position: relative;
     }
 
-    canvas#particles, canvas#sparkle, canvas#rain {
+    canvas#rain, canvas#lightning {
       position: fixed;
       top: 0; left: 0;
       width: 100vw;
@@ -46,10 +46,8 @@
 
     .welcome-message {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
       background-color: rgba(0, 0, 0, 0.8);
       color: white;
       display: flex;
@@ -61,9 +59,7 @@
       z-index: 9999;
     }
 
-    @keyframes fadeIn {
-      to { opacity: 1; }
-    }
+    @keyframes fadeIn { to { opacity: 1; } }
 
     h1 {
       font-size: 3em;
@@ -132,7 +128,6 @@
       background-size: 200% 200%;
       animation: gradientBtn 4s ease infinite;
       color: #fff;
-      font:'Outfit';
       font-weight: 600;
       border-radius: 12px;
       text-decoration: none;
@@ -206,11 +201,11 @@
    </div>
   </div>
 
-  <div class="overlay" id="qrOverlay" onclick="closeZoom()">
-   <canvas id="particles"></canvas>
-   <canvas id="sparkle"></canvas>
-   <canvas id="rain"></canvas>
-   <script>
+  <!-- Efek Hujan dan Petir -->
+  <canvas id="rain"></canvas>
+  <canvas id="lightning"></canvas>
+
+  <script>
   // Welcome transition
   document.getElementById('go-to-payment').addEventListener('click', function () {
     const audio = document.getElementById('clickSound');
@@ -226,73 +221,6 @@
       content.style.maxHeight = content.style.maxHeight ? null : content.scrollHeight + "px";
     });
   });
-
-  // 🎇 Partikel warna-warni
-  const canvas = document.getElementById("particles");
-  const ctx = canvas.getContext("2d");
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-  const particles = [];
-  for (let i = 0; i < 80; i++) {
-    particles.push({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height,
-      size: Math.random() * 2 + 1,
-      color: `hsl(${Math.random() * 360}, 100%, 60%)`,
-      speedX: Math.random() * 0.5 - 0.25,
-      speedY: Math.random() * 0.5 - 0.25,
-    });
-  }
-  function drawParticles() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    particles.forEach(p => {
-      ctx.fillStyle = p.color;
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-      ctx.fill();
-      p.x += p.speedX;
-      p.y += p.speedY;
-      if (p.x < 0 || p.x > canvas.width) p.speedX *= -1;
-      if (p.y < 0 || p.y > canvas.height) p.speedY *= -1;
-    });
-    requestAnimationFrame(drawParticles);
-  }
-  drawParticles();
-
-  // ✨ Efek Sparkle lembut
-  const sparkleCanvas = document.getElementById("sparkle");
-  const sparkleCtx = sparkleCanvas.getContext("2d");
-  sparkleCanvas.width = window.innerWidth;
-  sparkleCanvas.height = window.innerHeight;
-  const sparkles = [];
-  for (let i = 0; i < 40; i++) {
-    sparkles.push({
-      x: Math.random() * sparkleCanvas.width,
-      y: Math.random() * sparkleCanvas.height,
-      size: Math.random() * 1.5 + 0.5,
-      alpha: Math.random(),
-      speedY: Math.random() * 0.2 + 0.05
-    });
-  }
-  function drawSparkles() {
-    sparkleCtx.clearRect(0, 0, sparkleCanvas.width, sparkleCanvas.height);
-    sparkles.forEach(s => {
-      sparkleCtx.beginPath();
-      sparkleCtx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
-      sparkleCtx.fillStyle = `rgba(255, 255, 255, ${s.alpha})`;
-      sparkleCtx.fill();
-      s.y += s.speedY;
-      s.alpha += (Math.random() - 0.5) * 0.05;
-      if (s.alpha < 0.1) s.alpha = 0.1;
-      if (s.alpha > 1) s.alpha = 1;
-      if (s.y > sparkleCanvas.height) {
-        s.y = 0;
-        s.x = Math.random() * sparkleCanvas.width;
-      }
-    });
-    requestAnimationFrame(drawSparkles);
-  }
-  drawSparkles();
 
   // 🌧️ Efek Hujan Deras
   const rainCanvas = document.getElementById("rain");
@@ -327,12 +255,35 @@
     requestAnimationFrame(drawRain);
   }
   drawRain();
-   </script>
-  </div>
+
+  // ⚡ Efek Petir Kilat
+  const lightningCanvas = document.getElementById("lightning");
+  const ltx = lightningCanvas.getContext("2d");
+  lightningCanvas.width = window.innerWidth;
+  lightningCanvas.height = window.innerHeight;
+
+  function lightningStrike() {
+    ltx.clearRect(0, 0, lightningCanvas.width, lightningCanvas.height);
+    const flashes = Math.floor(Math.random() * 3) + 1;
+    for (let i = 0; i < flashes; i++) {
+      const x = Math.random() * lightningCanvas.width;
+      const y = Math.random() * lightningCanvas.height / 2;
+      const w = Math.random() * 5 + 2;
+      const h = lightningCanvas.height;
+      ltx.fillStyle = `rgba(255, 255, 255, ${Math.random() * 0.8 + 0.2})`;
+      ltx.fillRect(x - w / 2, y, w, h);
+    }
+    setTimeout(() => {
+      ltx.clearRect(0, 0, lightningCanvas.width, lightningCanvas.height);
+    }, 80);
+  }
+
+  // Petir muncul acak setiap 2–6 detik
+  function randomLightning() {
+    if (Math.random() < 0.8) lightningStrike();
+    setTimeout(randomLightning, Math.random() * 4000 + 2000);
+  }
+  randomLightning();
+  </script>
  </body>
 </html>
-
-
-
-
-
