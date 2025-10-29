@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>PAYMENT RYVEHOST</title>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
@@ -18,7 +18,7 @@
       position: relative;
     }
 
-    canvas#particles, canvas#snow {
+    canvas#particles, canvas#sparkle {
       position: fixed;
       top: 0; left: 0;
       width: 100vw;
@@ -61,9 +61,7 @@
       z-index: 9999;
     }
 
-    @keyframes fadeIn {
-      to { opacity: 1; }
-    }
+    @keyframes fadeIn { to { opacity: 1; } }
 
     h1 {
       font-size: 3em;
@@ -160,19 +158,20 @@
  </head>
  <body>
   <div class="shine"></div>
-  <!-- Welcome Animation -->
+
   <div id="welcome-message" class="welcome-message">
    <h1>WELCOME TO RYVE PAYMENT</h1>
    <p>𝙱𝚎𝚛𝚒𝚔𝚞𝚝 𝙳𝚊𝚏𝚝𝚊𝚛 𝙿𝚊𝚢𝚖𝚎𝚗𝚝 𝚛𝚢𝚟𝚎💸</p>
    <p>𝚊𝚔𝚞 𝚑𝚊𝚛𝚊𝚙 𝚔𝚊𝚖𝚞 𝚝𝚒𝚍𝚊𝚔 𝚜𝚊𝚕𝚊𝚑 𝚝𝚏 𝚘𝚔𝚎𝚢</p>
    <button id="go-to-payment" class="btn-link">CLICK CO</button>
   </div>
+
   <audio id="clickSound" src="https://files.catbox.moe/cnt71h.mp3"></audio>
-  <!-- Konten Utama -->
+
   <div id="main-content" style="display: none;">
    <h1>Payment Methods</h1>
    <p>Silakan Pilih Salah Satu Metode Pembayaran Di Bawah Ini</p>
-   <div class="qr" onclick="zoomQR()">
+   <div class="qr">
     <img src="https://files.catbox.moe/tfvji7.jpg">
    </div>
    <p class="subtitle">Untuk Qris Bisa Mintak Ke Owner Yahh🏷</p>
@@ -189,22 +188,27 @@
      <p>MANDIRI: tidak tersedia</p>
     </div>
    </div>
-   <p>KONTAK&INFORMASI KAMI
+   <p>KONTAK&INFORMASI KAMI</p>
    <div class="btn-group">
-    <a href="https://wa.me/6285726868568" class="btn-link" target="_blank">WhatsApp</a> <a href="https://www.instagram.com/ryve_kk" class="btn-link" target="_blank">Instagram</a> <a href="https://wa.me/6283171112175" class="btn-link" target="_blank">WhatsApp Cadangan</a> <a href="https://t.me/ryvedom" class="btn-link" target="_blank">Channel Telegram</a> <a href="tidak tersedia" class="btn-link">Tiktok</a> <a href="https://t.me/testiryve1" class="btn-link" target="_blank">Channel Testimoni</a>
+    <a href="https://wa.me/6285726868568" class="btn-link" target="_blank">WhatsApp</a>
+    <a href="https://www.instagram.com/ryve_kk" class="btn-link" target="_blank">Instagram</a>
+    <a href="https://wa.me/6283171112175" class="btn-link" target="_blank">WhatsApp Cadangan</a>
+    <a href="https://t.me/ryvedom" class="btn-link" target="_blank">Channel Telegram</a>
+    <a href="#" class="btn-link">Tiktok</a>
+    <a href="https://t.me/testiryve1" class="btn-link" target="_blank">Channel Testimoni</a>
    </div>
   </div>
-  <div class="overlay" id="qrOverlay" onclick="closeZoom()">
-   <canvas id="particles"></canvas>
-   <canvas id="snow"></canvas>
-   <script>
-  // Welcome transition
+
+  <canvas id="particles"></canvas>
+  <canvas id="sparkle"></canvas>
+
+  <script>
   document.getElementById('go-to-payment').addEventListener('click', function () {
-  const audio = document.getElementById('clickSound');
-  audio.play(); // Memutar suara
-  document.getElementById('welcome-message').style.display = 'none';
-  document.getElementById('main-content').style.display = 'block';
-});
+    const audio = document.getElementById('clickSound');
+    audio.play(); 
+    document.getElementById('welcome-message').style.display = 'none';
+    document.getElementById('main-content').style.display = 'block';
+  });
 
   document.querySelectorAll(".collapsible").forEach(btn => {
     btn.addEventListener("click", function () {
@@ -214,7 +218,6 @@
     });
   });
 
-  // Partikel warna-warni
   const canvas = document.getElementById("particles");
   const ctx = canvas.getContext("2d");
   canvas.width = window.innerWidth;
@@ -246,72 +249,33 @@
   }
   drawParticles();
 
-  // Efek salju
-  const snowCanvas = document.getElementById("snow");
-  const snowCtx = snowCanvas.getContext("2d");
-  snowCanvas.width = window.innerWidth;
-  snowCanvas.height = window.innerHeight;
-  const snowflakes = [];
-  for (let i = 0; i < 100; i++) {
-    snowflakes.push({
-      x: Math.random() * snowCanvas.width,
-      y: Math.random() * snowCanvas.height,
-      radius: Math.random() * 3 + 3,
-      speedY: Math.random() * 1 + 2,
-      speedX: Math.random() * 0.5 - 0.50
+  const sparkleCanvas = document.getElementById("sparkle");
+  const sparkleCtx = sparkleCanvas.getContext("2d");
+  sparkleCanvas.width = window.innerWidth;
+  sparkleCanvas.height = window.innerHeight;
+  const sparkles = [];
+  for (let i = 0; i < 50; i++) {
+    sparkles.push({
+      x: Math.random() * sparkleCanvas.width,
+      y: Math.random() * sparkleCanvas.height,
+      radius: Math.random() * 1.5 + 0.5,
+      opacity: Math.random(),
+      fade: Math.random() * 0.02 + 0.01
     });
   }
-        window.addEventListener('load', () => {
-            const loader = document.getElementById('loader');
-            const about = document.getElementById('about');
-            setTimeout(() => {
-                loader.classList.add('hidden');
-                setTimeout(() => {
-                    about.classList.add('active');
-                }, 200);
-            }, 2500);
-        });
-
-        function showPayment() {
-            const about = document.getElementById('about');
-            const payment = document.getElementById('payment');
-            about.classList.remove('active');
-            about.classList.add('hidden');
-            setTimeout(() => {
-                payment.classList.remove('hidden');
-                payment.classList.add('active');
-            }, 900);
-        }
-
-        function showAbout() {
-            const payment = document.getElementById('payment');
-            const about = document.getElementById('about');
-            payment.classList.remove('active');
-            payment.classList.add('hidden');
-            setTimeout(() => {
-                about.classList.remove('hidden');
-                about.classList.add('active');
-            }, 900);
-        }
-  function drawSnow() {
-    snowCtx.clearRect(0, 0, snowCanvas.width, snowCanvas.height);
-    snowCtx.fillStyle = "rgba(255, 255, 255, 0.8)";
-    snowflakes.forEach(flake => {
-      snowCtx.beginPath();
-      snowCtx.arc(flake.x, flake.y, flake.radius, 0, Math.PI * 2);
-      snowCtx.fill();
-      flake.y += flake.speedY;
-      flake.x += flake.speedX;
-      if (flake.y > snowCanvas.height) {
-        flake.y = -flake.radius;
-        flake.x = Math.random() * snowCanvas.width;
-      }
+  function drawSparkles() {
+    sparkleCtx.clearRect(0, 0, sparkleCanvas.width, sparkleCanvas.height);
+    sparkles.forEach(s => {
+      sparkleCtx.beginPath();
+      sparkleCtx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
+      sparkleCtx.fillStyle = `rgba(255,255,255,${s.opacity})`;
+      sparkleCtx.fill();
+      s.opacity += s.fade;
+      if (s.opacity <= 0 || s.opacity >= 1) s.fade *= -1;
     });
-    requestAnimationFrame(drawSnow);
+    requestAnimationFrame(drawSparkles);
   }
-  drawSnow();
-</script>
-  </div>
+  drawSparkles();
+  </script>
  </body>
-
 </html>
