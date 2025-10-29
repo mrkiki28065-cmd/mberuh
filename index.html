@@ -18,7 +18,7 @@
       position: relative;
     }
 
-    canvas#particles, canvas#sparkle {
+    canvas#particles, canvas#sparkle, canvas#rain {
       position: fixed;
       top: 0; left: 0;
       width: 100vw;
@@ -61,7 +61,9 @@
       z-index: 9999;
     }
 
-    @keyframes fadeIn { to { opacity: 1; } }
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
 
     h1 {
       font-size: 3em;
@@ -159,6 +161,7 @@
  <body>
   <div class="shine"></div>
 
+  <!-- Welcome Animation -->
   <div id="welcome-message" class="welcome-message">
    <h1>WELCOME TO RYVE PAYMENT</h1>
    <p>𝙱𝚎𝚛𝚒𝚔𝚞𝚝 𝙳𝚊𝚏𝚝𝚊𝚛 𝙿𝚊𝚢𝚖𝚎𝚗𝚝 𝚛𝚢𝚟𝚎💸</p>
@@ -168,10 +171,11 @@
 
   <audio id="clickSound" src="https://files.catbox.moe/cnt71h.mp3"></audio>
 
+  <!-- Konten Utama -->
   <div id="main-content" style="display: none;">
    <h1>Payment Methods</h1>
    <p>Silakan Pilih Salah Satu Metode Pembayaran Di Bawah Ini</p>
-   <div class="qr">
+   <div class="qr" onclick="zoomQR()">
     <img src="https://files.catbox.moe/tfvji7.jpg">
    </div>
    <p class="subtitle">Untuk Qris Bisa Mintak Ke Owner Yahh🏷</p>
@@ -199,10 +203,12 @@
    </div>
   </div>
 
-  <canvas id="particles"></canvas>
-  <canvas id="sparkle"></canvas>
-
-  <script>
+  <div class="overlay" id="qrOverlay" onclick="closeZoom()">
+   <canvas id="particles"></canvas>
+   <canvas id="sparkle"></canvas>
+   <canvas id="rain"></canvas>
+   <script>
+  // Welcome transition
   document.getElementById('go-to-payment').addEventListener('click', function () {
     const audio = document.getElementById('clickSound');
     audio.play(); 
@@ -218,6 +224,7 @@
     });
   });
 
+  // 🎇 Partikel warna-warni
   const canvas = document.getElementById("particles");
   const ctx = canvas.getContext("2d");
   canvas.width = window.innerWidth;
@@ -249,33 +256,75 @@
   }
   drawParticles();
 
+  // ✨ Efek Sparkle lembut
   const sparkleCanvas = document.getElementById("sparkle");
   const sparkleCtx = sparkleCanvas.getContext("2d");
   sparkleCanvas.width = window.innerWidth;
   sparkleCanvas.height = window.innerHeight;
   const sparkles = [];
-  for (let i = 0; i < 50; i++) {
+  for (let i = 0; i < 40; i++) {
     sparkles.push({
       x: Math.random() * sparkleCanvas.width,
       y: Math.random() * sparkleCanvas.height,
-      radius: Math.random() * 1.5 + 0.5,
-      opacity: Math.random(),
-      fade: Math.random() * 0.02 + 0.01
+      size: Math.random() * 1.5 + 0.5,
+      alpha: Math.random(),
+      speedY: Math.random() * 0.2 + 0.05
     });
   }
   function drawSparkles() {
     sparkleCtx.clearRect(0, 0, sparkleCanvas.width, sparkleCanvas.height);
     sparkles.forEach(s => {
       sparkleCtx.beginPath();
-      sparkleCtx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
-      sparkleCtx.fillStyle = `rgba(255,255,255,${s.opacity})`;
+      sparkleCtx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+      sparkleCtx.fillStyle = `rgba(255, 255, 255, ${s.alpha})`;
       sparkleCtx.fill();
-      s.opacity += s.fade;
-      if (s.opacity <= 0 || s.opacity >= 1) s.fade *= -1;
+      s.y += s.speedY;
+      s.alpha += (Math.random() - 0.5) * 0.05;
+      if (s.alpha < 0.1) s.alpha = 0.1;
+      if (s.alpha > 1) s.alpha = 1;
+      if (s.y > sparkleCanvas.height) {
+        s.y = 0;
+        s.x = Math.random() * sparkleCanvas.width;
+      }
     });
     requestAnimationFrame(drawSparkles);
   }
   drawSparkles();
-  </script>
+
+  // 🌧️ Efek Hujan Deras
+  const rainCanvas = document.getElementById("rain");
+  const rainCtx = rainCanvas.getContext("2d");
+  rainCanvas.width = window.innerWidth;
+  rainCanvas.height = window.innerHeight;
+  const drops = [];
+  for (let i = 0; i < 250; i++) {
+    drops.push({
+      x: Math.random() * rainCanvas.width,
+      y: Math.random() * rainCanvas.height,
+      length: Math.random() * 20 + 10,
+      speed: Math.random() * 10 + 8
+    });
+  }
+  function drawRain() {
+    rainCtx.clearRect(0, 0, rainCanvas.width, rainCanvas.height);
+    rainCtx.strokeStyle = "rgba(200, 200, 255, 0.5)";
+    rainCtx.lineWidth = 1.2;
+    rainCtx.lineCap = "round";
+    drops.forEach(d => {
+      rainCtx.beginPath();
+      rainCtx.moveTo(d.x, d.y);
+      rainCtx.lineTo(d.x, d.y + d.length);
+      rainCtx.stroke();
+      d.y += d.speed;
+      if (d.y > rainCanvas.height) {
+        d.y = -20;
+        d.x = Math.random() * rainCanvas.width;
+      }
+    });
+    requestAnimationFrame(drawRain);
+  }
+  drawRain();
+   </script>
+  </div>
  </body>
 </html>
